@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile      UserProfile?
+  settings     UserSettings?
+  foodItems    FoodItem[]
+  mealEntries  MealEntry[]
+  bankAccount  BankAccount?
+  pots         Pot[]
+  achievements UserAchievement[]
+  xp           UserXP?
+}
+
+model UserProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  heightCm            Float
+  currentWeightKg     Float
+  goalWeightKg        Float
+  activityLevel       ActivityLevel
+  goalPace            GoalPace
+  gender              Gender
+  dateOfBirth         DateTime
+  dailyTargetCalories Int
+  weightHistory       Json     @default("[]") // Array of { date, weightKg }
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserSettings {
+  id                 String @id @default(cuid())
+  userId             String @unique
+  pointsPerCalorie   Float  @default(0.1)
+  maxDailyEarnPoints Int    @default(300)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserXP {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  totalXp        Int      @default(0)
+  level          Int      @default(1)
+  currentStreak  Int      @default(0)
+  longestStreak  Int      @default(0)
+  lastLogDate    DateTime?
+  underTargetStreak Int   @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FoodItem {
+  id                String   @id @default(cuid())
+  userId            String?  // null means predefined/global
+  name              String
+  caloriesPerServing Float
+  servingLabel      String   @default("serving")
+  imageUrl          String?
+  isCustom          Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  user            User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealEntryItems  MealEntryItem[]
+}
+
+model MealEntry {
+  id       String   @id @default(cuid())
+  userId   String
+  date     DateTime @db.Date
+  mealType MealType
+  createdAt DateTime @default(now())
+
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items MealEntryItem[]
+
+  @@index([userId, date])
+}
+
+model MealEntryItem {
+  id               String @id @default(cuid())
+  mealEntryId      String
+  foodItemId       String
+  servings         Float
+  computedCalories Float
+
+  mealEntry MealEntry @relation(fields: [mealEntryId], references: [id], onDelete: Cascade)
+  foodItem  FoodItem  @relation(fields: [foodItemId], references: [id])
+}
+
+model BankAccount {
+  id            String @id @default(cuid())
+  userId        String @unique
+  pointsBalance Float  @default(0)
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions BankTransaction[]
+}
+
+model BankTransaction {
+  id                String          @id @default(cuid())
+  bankAccountId     String
+  type              TransactionType
+  points            Float
+  caloriesEquivalent Float
+  note              String?
+  potId             String?
+  createdAt         DateTime        @default(now())
+
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  pot         Pot?        @relation(fields: [potId], references: [id])
+
+  @@index([bankAccountId, createdAt])
+}
+
+model Pot {
+  id             String   @id @default(cuid())
+  userId         String
+  title          String
+  targetCalories Float
+  dueDate        DateTime @db.Date
+  savedPoints    Float    @default(0)
+  isRedeemed     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions BankTransaction[]
+}
+
+model Achievement {
+  id          String @id @default(cuid())
+  key         String @unique
+  title       String
+  description String
+  icon        String
+  xpReward    Int
+
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  achievementId String
+  earnedAt      DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+
+  @@unique([userId, achievementId])
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHT
+  MODERATE
+  ACTIVE
+  VERY_ACTIVE
+}
+
+enum GoalPace {
+  SLOW
+  NORMAL
+  FAST
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum TransactionType {
+  EARN
+  WITHDRAW
+  ALLOCATE
+  REDEEM
+}

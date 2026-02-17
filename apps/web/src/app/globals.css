@@ -1,0 +1,236 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+  
+  --color-accent-50: #ecfdf5;
+  --color-accent-100: #d1fae5;
+  --color-accent-200: #a7f3d0;
+  --color-accent-300: #6ee7b7;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+  --color-accent-700: #047857;
+  
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  
+  /* Dark surface palette */
+  --color-surface-50: #f9fafb;
+  --color-surface-100: #f3f4f6;
+  --color-surface-200: #e5e7eb;
+  --color-surface-300: #d1d5db;
+  --color-surface-400: #9ca3af;
+  --color-surface-500: #6b7280;
+  --color-surface-600: #4b5563;
+  --color-surface-700: #374151;
+  --color-surface-800: #1f2937;
+  --color-surface-850: #18202f;
+  --color-surface-900: #111827;
+  --color-surface-950: #0b1120;
+  
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora', 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  
+  --radius-card: 1rem;
+  --radius-button: 0.75rem;
+  --radius-pill: 9999px;
+}
+
+/* Prevent flash of unstyled content */
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(1200px circle at 100% -10%, color-mix(in oklab, var(--color-primary-200) 50%, transparent), transparent 45%),
+    radial-gradient(900px circle at -20% 0%, color-mix(in oklab, var(--color-accent-200) 65%, transparent), transparent 45%);
+  background-repeat: no-repeat;
+}
+
+/* Safe area insets for notch devices */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-area-pt {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Prevent iOS auto-zoom on input focus (must be >= 16px) */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
+
+/* Touch behaviour */
+button,
+a,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent overscroll bounce on iOS */
+html {
+  overscroll-behavior: none;
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  overflow: auto;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Smooth theme transitions */
+* {
+  transition-property: background-color, border-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* Scrollbar hiding for horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+:root.dark body {
+  background-image:
+    radial-gradient(1200px circle at 100% -10%, color-mix(in oklab, var(--color-primary-700) 40%, transparent), transparent 55%),
+    radial-gradient(900px circle at -20% 0%, color-mix(in oklab, var(--color-accent-700) 30%, transparent), transparent 55%);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+  background-image: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%);
+  animation: ambientSweep 18s linear infinite;
+}
+
+.game-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.game-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.18), transparent 35%);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.game-card[data-interactive='true'] {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.game-card[data-interactive='true']:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+}
+
+.dark .game-card[data-interactive='true']:hover {
+  box-shadow: 0 16px 32px rgba(2, 6, 23, 0.45);
+}
+
+.game-card[data-interactive='true']:hover::after {
+  opacity: 1;
+}
+
+.xp-gradient {
+  background-image: linear-gradient(92deg, var(--color-warning-500), var(--color-accent-500) 45%, var(--color-primary-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.xp-shimmer {
+  background-image: linear-gradient(120deg, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0.45) 30%, rgba(255, 255, 255, 0) 60%);
+  background-size: 220% 100%;
+  animation: shimmerSlide 2.8s ease-in-out infinite;
+}
+
+.quest-chip {
+  position: relative;
+  overflow: hidden;
+}
+
+.quest-chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transition: opacity 180ms ease;
+}
+
+.quest-chip:hover::before {
+  opacity: 1;
+}
+
+@keyframes ambientSweep {
+  0% {
+    transform: translateX(-35%);
+  }
+  100% {
+    transform: translateX(35%);
+  }
+}
+
+@keyframes shimmerSlide {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: -100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+
+  .xp-shimmer {
+    animation: none;
+  }
+
+  .game-card[data-interactive='true'] {
+    transition: none;
+  }
+
+  .game-card[data-interactive='true']:hover {
+    transform: none;
+  }
+}
