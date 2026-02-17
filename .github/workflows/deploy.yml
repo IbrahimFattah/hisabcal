@@ -47,7 +47,7 @@ jobs:
           tags: |
             ghcr.io/ibrahimfattah/hisab-cal/frontend:latest
             ghcr.io/ibrahimfattah/hisab-cal/frontend:${{ github.sha }}
-          ccache-from: type=registry,ref=ghcr.io/ibrahimfattah/hisab-cal/frontend:latest
+          cache-from: type=registry,ref=ghcr.io/ibrahimfattah/hisab-cal/frontend:latest
           cache-to: type=inline
 
       - name: Deploy to Server
