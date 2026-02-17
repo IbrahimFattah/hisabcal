@@ -7,6 +7,11 @@ import { ThemeProvider } from '@/providers/ThemeProvider';
 export const metadata: Metadata = {
   title: 'HisabCal - Calorie Banking System',
   description: 'Track calories, earn points, and save for special occasions',
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+    shortcut: '/icon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

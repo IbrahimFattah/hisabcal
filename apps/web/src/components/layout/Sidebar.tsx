@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -25,11 +26,9 @@ export function Sidebar() {
 
   return (
     <aside className="hidden h-screen sticky top-0 border-r border-gray-100 bg-white/95 dark:border-surface-700 dark:bg-surface-900/95 md:flex md:w-64 md:flex-col">
-      <div className="px-6 py-6">
-        <h1 className="font-display text-2xl font-black tracking-tight text-primary-600 dark:text-primary-400">
-          HisabCal
-        </h1>
-        <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">Calorie Banking System</p>
+      <div className="px-6 py-5">
+        <Image src="/logo.png" alt="HisabCal" width={150} height={42} className="h-10 w-auto dark:brightness-110" priority />
+        <p className="mt-1.5 text-xs text-gray-400 dark:text-gray-500">Calorie Banking System</p>
       </div>
       <nav className="flex-1 px-3 space-y-1">
         {navItems.map((item) => {

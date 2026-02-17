@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth';
 import { useTheme } from '@/providers/ThemeProvider';
 import { LogOut, User, Moon, Sun, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -13,7 +14,7 @@ export function Header() {
       <div className="flex items-center justify-between px-4 md:px-6 h-14">
         {/* Mobile: app logo */}
         <div className="md:hidden">
-          <h1 className="font-display text-xl font-black text-primary-600 dark:text-primary-400">HisabCal</h1>
+          <Image src="/logo.png" alt="HisabCal" width={130} height={36} className="h-8 w-auto dark:brightness-110" priority />
         </div>
 
         {/* Desktop: welcome */}
