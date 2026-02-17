@@ -33,8 +33,10 @@ export function Dialog({ open, onClose, title, children, className }: DialogProp
         className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
+      {/* mb-16 on mobile lifts the sheet above the bottom nav bar (64px) */}
       <div className={cn(
-        'relative w-full sm:max-w-lg bg-white dark:bg-surface-900 rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto overscroll-contain',
+        'relative w-full sm:max-w-lg bg-white dark:bg-surface-900 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-y-auto overscroll-contain',
+        'mb-16 sm:mb-0 max-h-[calc(90vh-4rem)] sm:max-h-[85vh]',
         'animate-in slide-in-from-bottom duration-300',
         className
       )}>
